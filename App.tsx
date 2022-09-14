@@ -1,24 +1,33 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { StatusBar } from "react-native";
+
+import {
+  useFonts,
+  Inter_400Regular,
+  Inter_600SemiBold,
+  Inter_700Bold,
+  Inter_900Black
+} from "@expo-google-fonts/inter";
+
+import { Background } from "./src/components/background";
+import { Home } from "./src/screens/home";
+import { Loading } from "./src/components/loading";
 
 export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>Hellow React Native</Text>
-      <StatusBar style="auto" backgroundColor="#fff"/>
-    </View>
-  );
-}
+  const [fontsLoade] = useFonts({
+    Inter_400Regular,
+    Inter_600SemiBold,
+    Inter_700Bold,
+    Inter_900Black
+  });
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#000",
-    alignItems: "center",
-    justifyContent: "center"
-  },
-  text: {
-    color: "#fff",
-    fontSize: 22
-  }
-});
+  return (
+    <Background>
+      <StatusBar 
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
+      { fontsLoade ? <Home /> : <Loading /> }
+    </Background>
+  );
+};
