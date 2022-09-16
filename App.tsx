@@ -9,8 +9,8 @@ import {
 } from "@expo-google-fonts/inter";
 
 import { Background } from "./src/components/background";
-import { Home } from "./src/screens/home";
 import { Loading } from "./src/components/loading";
+import { Rountes } from "./src/routes";
 
 export default function App() {
   const [fontsLoade] = useFonts({
@@ -22,12 +22,12 @@ export default function App() {
 
   return (
     <Background>
-      <StatusBar 
+      <StatusBar
         barStyle="light-content"
         backgroundColor="transparent"
         translucent
       />
-      { fontsLoade ? <Home /> : <Loading /> }
+      {fontsLoade ? <Rountes /> : <Loading />}
     </Background>
   );
 };
