@@ -14,6 +14,7 @@ import { GameParams } from "../../@types/navigation";
 import { Heading } from "../../components/heading";
 import { Background } from "../../components/background";
 import { DuoCard, IDuoCard } from "../../components/duo-card";
+import { DuoMatch } from "../../components/duo-match";
 
 export function Game() {
 
@@ -21,16 +22,23 @@ export function Game() {
     const game = route.params as GameParams;
     const navigate = useNavigation();
     const [duoGame, setDuoGame] = useState<IDuoCard[]>([]);
+    const [discordDuoSelected, setDiscordDuoSelected] = useState("");
+
+    function handleGoBack() {
+        navigate.goBack();
+    };
+
+    async function getDiscordUser(adsId: string) {
+        fetch(`http://192.168.1.6:3333/ads/${adsId}/discord`)
+            .then(response => response.json())
+            .then(data => setDiscordDuoSelected(data.discord))
+    }
 
     useEffect(() => {
         fetch(`http://192.168.1.6:3333/games/${game.id}/ads`)
             .then(response => response.json())
             .then(data => setDuoGame(data))
     }, []);
-
-    function handleGoBack() {
-        navigate.goBack();
-    };
 
     return (
         <Background>
@@ -67,7 +75,11 @@ export function Game() {
                     data={duoGame}
                     keyExtractor={item => item.id}
                     renderItem={({ item }) => (
-                        <DuoCard data={item} key={item.id} onConnect={() => { }} />
+                        <DuoCard
+                            data={item}
+                            key={item.id}
+                            onConnect={() => getDiscordUser(item.id)}
+                        />
                     )}
                     horizontal
                     style={styles.containerList}
@@ -80,6 +92,15 @@ export function Game() {
                             Não há anúncios publicados para esse jogo ainda
                         </Text>
                     )}
+                />
+
+                <DuoMatch
+                    animationType="fade"
+                    visible={discordDuoSelected.length > 0}
+                    transparent
+                    statusBarTranslucent
+                    discord={discordDuoSelected}
+                    onClose={() => setDiscordDuoSelected("")}
                 />
             </SafeAreaView>
         </Background>
